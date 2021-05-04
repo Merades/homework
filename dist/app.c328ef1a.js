@@ -148,15 +148,148 @@ var todos = [{
   status: 'active'
 }];
 var parent = document.querySelector('body > div > div:nth-child(4) > ul');
-parent.innerHTML = '';
-todos.forEach(function (element) {
-  var newLi = document.createElement("li");
-  newLi.innerText = "".concat(element.name);
-  parent.appendChild(newLi); // parent.innerHTML += `<li ${element.key}>
-  //                           ${element.name}
-  //                      </li>`;
-  //                      console.log(element);
-});
+
+var renderList = function renderList() {
+  parent.innerHTML = '';
+  todos.forEach(function (element) {
+    var newLi = document.createElement("li");
+    var newDiv = document.createElement("div");
+    var newInput = document.createElement("input");
+    var newSpan = document.createElement("span");
+    var newButton = document.createElement("button"); //newLi.innerText = `${element.name}`;
+
+    newSpan.innerText = "".concat(element.name);
+    newButton.classList.add('destroy');
+    newInput.setAttribute('type', 'checkbox');
+    newInput.classList.add('toggle');
+    newDiv.append(newInput, newSpan, newButton);
+    newDiv.classList.add('todo');
+    newLi.appendChild(newDiv);
+    parent.appendChild(newLi);
+
+    newLi.onclick = function () {
+      newLi.classList.add('completed');
+    };
+
+    newLi.ondblclick = function () {
+      newLi.classList.remove('completed');
+    };
+
+    newLi.onmouseover = function () {
+      newLi.style.border = '1px solid gray';
+    };
+
+    newLi.onmouseout = function () {
+      newLi.style.border = '';
+    }; // parent.innerHTML += `<li ${element.key}>
+    //                           ${element.name}
+    //                      </li>`;
+    //                      console.log(element);
+
+  });
+}; // todos.forEach(element =>{
+//   let newLi = document.createElement("li");
+//   let newDiv = document.createElement("div");
+//   let newInput = document.createElement("input");
+//   let newSpan = document.createElement("span");
+//   let newButton = document.createElement("button");
+//   //newLi.innerText = `${element.name}`;
+//   newSpan.innerText = `${element.name}`;
+//   newButton.classList.add('destroy');
+//   newInput.setAttribute('type', 'checkbox');
+//   newInput.classList.add('toggle');
+//   newDiv.append(newInput, newSpan, newButton);
+//   newDiv.classList.add('todo');
+//   newLi.appendChild(newDiv);
+//   parent.appendChild(newLi);
+//   newLi.onclick = function () {
+//     newLi.classList.add('completed');
+//   }
+//   newLi.ondblclick = function () {
+//     newLi.classList.remove('completed');
+//   }
+//   newLi.onmouseover = function(){
+//     newLi.style.border = '1px solid gray';
+//   }
+//   newLi.onmouseout = function(){
+//     newLi.style.border = '';
+//   }
+//   // parent.innerHTML += `<li ${element.key}>
+//   //                           ${element.name}
+//   //                      </li>`;
+//   //                      console.log(element);
+// });
+
+
+var jjsBbarr = document.querySelector('#js-bar'); //создаю див
+
+var div1 = document.createElement('div');
+var div2 = document.createElement('div');
+var div3 = document.createElement('div'); // создаю span
+
+var span1 = document.createElement('span'); // создаю ul
+
+var ul1 = document.createElement('ul'); // создаю li
+
+var li1 = document.createElement('li');
+var li2 = document.createElement('li');
+var li3 = document.createElement('li'); // создаю a
+
+var a1 = document.createElement('a');
+var a2 = document.createElement('a');
+var a3 = document.createElement('a'); // создаю button
+
+var button1 = document.createElement('button'); // даю ему класс
+
+div1.classList.add('col-1-4');
+div2.classList.add('col-1-2');
+div3.classList.add('col-1-4');
+ul1.classList.add('filter');
+a1.classList.add('button');
+a2.classList.add('button');
+a3.classList.add('button');
+span1.classList.add('total');
+button1.classList.add('button', 'button--clear'); // создаю атрибут
+
+ul1.setAttribute('id', 'js-filters');
+a1.setAttribute('href', '#/all');
+a2.setAttribute('href', '#/active');
+a3.setAttribute('href', '#/completed');
+span1.setAttribute('id', 'js-total');
+button1.setAttribute('id', 'js-clear-completed'); // текст
+
+a1.innerText = 'All';
+a2.innerText = 'Active';
+a3.innerText = 'Completed';
+button1.innerText = 'Clear Completed'; // создаем связь
+
+div1.append(span1);
+div2.append(ul1);
+div3.append(button1);
+ul1.append(li1, li2, li3);
+li1.append(a1);
+li2.append(a2);
+li3.append(a3); // пушим в html (пытаюсь своими словами надеюсь правильно понимаю)
+
+jjsBbarr.append(div1, div2, div3);
+
+a1.onclick = function () {
+  alert('ALL');
+};
+
+a2.onclick = function () {
+  alert('ACTIVE');
+};
+
+a3.onclick = function () {
+  alert('COMPLETED');
+};
+
+button1.onclick = function () {
+  alert('Clear Completed');
+};
+
+renderList();
 var superFirst = document.createElement("li");
 superFirst.innerText = 'superFirst';
 parent.prepend(superFirst);
@@ -173,13 +306,30 @@ parent.insertBefore(superMiddl, parent.children[4]); //  for (let i = 0; i < tod
 //                          console.log(todo);
 //  };
 
-var rowBar = document.querySelector('span');
+var rowBar = document.querySelector('#js-total');
 rowBar.innerText = "".concat(todos.length, " items left");
 var rowBarColor = document.querySelector('span');
 rowBarColor.style.backgroundColor = 'blue';
 var titleH = document.querySelector('h1');
 titleH.innerText = 'Hello world';
 titleH.style.color = 'red';
+var form = document.getElementById('insert__form');
+
+form.onsubmit = function (event) {
+  // убираем дефолтное событие 
+  event.preventDefault(); //
+
+  var inputPush = event.currentTarget.firstElementChild; // добавляем новое значение
+
+  todos.push({
+    name: inputPush.value,
+    key: 8,
+    status: 'active'
+  });
+  inputPush.value = '';
+  renderList();
+  console.log('todos', todos);
+};
 },{}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -208,7 +358,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50600" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55829" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
