@@ -147,18 +147,33 @@ var todos = [{
   key: 7,
   status: 'active'
 }];
+window.todos = todos;
+var filter = false;
 var parent = document.querySelector('body > div > div:nth-child(4) > ul');
 
 var renderList = function renderList() {
   parent.innerHTML = '';
-  todos.forEach(function (element) {
+  var todoList = [];
+
+  if (filter && filter !== 'all') {
+    todoList = todos.filter(function (element) {
+      return element.status === filter;
+    });
+  } else {
+    todoList = [].concat(todos);
+  }
+
+  console.log(todoList);
+
+  var _loop = function _loop(i) {
+    var todo = todoList[i];
     var newLi = document.createElement("li");
     var newDiv = document.createElement("div");
     var newInput = document.createElement("input");
     var newSpan = document.createElement("span");
     var newButton = document.createElement("button"); //newLi.innerText = `${element.name}`;
 
-    newSpan.innerText = "".concat(element.name);
+    newSpan.innerHTML = "<div>".concat(todo.name, "</div>");
     newButton.classList.add('destroy');
     newInput.setAttribute('type', 'checkbox');
     newInput.classList.add('toggle');
@@ -181,138 +196,91 @@ var renderList = function renderList() {
 
     newLi.onmouseout = function () {
       newLi.style.border = '';
-    }; // parent.innerHTML += `<li ${element.key}>
-    //                           ${element.name}
-    //                      </li>`;
-    //                      console.log(element);
+    };
+  };
 
-  });
-}; // todos.forEach(element =>{
-//   let newLi = document.createElement("li");
-//   let newDiv = document.createElement("div");
-//   let newInput = document.createElement("input");
-//   let newSpan = document.createElement("span");
-//   let newButton = document.createElement("button");
-//   //newLi.innerText = `${element.name}`;
-//   newSpan.innerText = `${element.name}`;
-//   newButton.classList.add('destroy');
-//   newInput.setAttribute('type', 'checkbox');
-//   newInput.classList.add('toggle');
-//   newDiv.append(newInput, newSpan, newButton);
-//   newDiv.classList.add('todo');
-//   newLi.appendChild(newDiv);
-//   parent.appendChild(newLi);
-//   newLi.onclick = function () {
-//     newLi.classList.add('completed');
-//   }
-//   newLi.ondblclick = function () {
-//     newLi.classList.remove('completed');
-//   }
-//   newLi.onmouseover = function(){
-//     newLi.style.border = '1px solid gray';
-//   }
-//   newLi.onmouseout = function(){
-//     newLi.style.border = '';
-//   }
-//   // parent.innerHTML += `<li ${element.key}>
-//   //                           ${element.name}
-//   //                      </li>`;
-//   //                      console.log(element);
-// });
+  for (var i = 0; i < todoList.length; i++) {
+    _loop(i);
+  }
 
-
-var jjsBbarr = document.querySelector('#js-bar'); //создаю див
-
-var div1 = document.createElement('div');
-var div2 = document.createElement('div');
-var div3 = document.createElement('div'); // создаю span
-
-var span1 = document.createElement('span'); // создаю ul
-
-var ul1 = document.createElement('ul'); // создаю li
-
-var li1 = document.createElement('li');
-var li2 = document.createElement('li');
-var li3 = document.createElement('li'); // создаю a
-
-var a1 = document.createElement('a');
-var a2 = document.createElement('a');
-var a3 = document.createElement('a'); // создаю button
-
-var button1 = document.createElement('button'); // даю ему класс
-
-div1.classList.add('col-1-4');
-div2.classList.add('col-1-2');
-div3.classList.add('col-1-4');
-ul1.classList.add('filter');
-a1.classList.add('button');
-a2.classList.add('button');
-a3.classList.add('button');
-span1.classList.add('total');
-button1.classList.add('button', 'button--clear'); // создаю атрибут
-
-ul1.setAttribute('id', 'js-filters');
-a1.setAttribute('href', '#/all');
-a2.setAttribute('href', '#/active');
-a3.setAttribute('href', '#/completed');
-span1.setAttribute('id', 'js-total');
-button1.setAttribute('id', 'js-clear-completed'); // текст
-
-a1.innerText = 'All';
-a2.innerText = 'Active';
-a3.innerText = 'Completed';
-button1.innerText = 'Clear Completed'; // создаем связь
-
-div1.append(span1);
-div2.append(ul1);
-div3.append(button1);
-ul1.append(li1, li2, li3);
-li1.append(a1);
-li2.append(a2);
-li3.append(a3); // пушим в html (пытаюсь своими словами надеюсь правильно понимаю)
-
-jjsBbarr.append(div1, div2, div3);
-
-a1.onclick = function () {
-  alert('ALL');
-};
-
-a2.onclick = function () {
-  alert('ACTIVE');
-};
-
-a3.onclick = function () {
-  alert('COMPLETED');
-};
-
-button1.onclick = function () {
-  alert('Clear Completed');
+  ;
 };
 
 renderList();
-var superFirst = document.createElement("li");
-superFirst.innerText = 'superFirst';
-parent.prepend(superFirst);
-var superLast = document.createElement("li");
-superLast.innerText = 'superLast';
-parent.append(superLast);
-var superMiddl = document.createElement("li");
-superMiddl.innerText = 'superMiddl';
-parent.insertBefore(superMiddl, parent.children[4]); //  for (let i = 0; i < todos.length; i++){
-//      let todo = todos[i];
-//      parent.innerHTML += `<li ${todo.key}>
-//                              ${todo.name}
-//                          </li>`;
-//                          console.log(todo);
-//  };
+renderBar();
 
-var rowBar = document.querySelector('#js-total');
-rowBar.innerText = "".concat(todos.length, " items left");
-var rowBarColor = document.querySelector('span');
-rowBarColor.style.backgroundColor = 'blue';
-var titleH = document.querySelector('h1');
-titleH.innerText = 'Hello world';
-titleH.style.color = 'red';
+function renderBar() {
+  var jjsBbarr = document.querySelector('#js-bar');
+  jjsBbarr.innerHTML = ''; //создаю див
+
+  var div1 = document.createElement('div');
+  var div2 = document.createElement('div');
+  var div3 = document.createElement('div'); // создаю span
+
+  var span1 = document.createElement('span'); // создаю ul
+
+  var ul1 = document.createElement('ul'); // создаю li
+  // let li1 = document.createElement('li');
+  // let li2 = document.createElement('li');
+  // let li3 = document.createElement('li');
+  // создаю a
+
+  var a1 = document.createElement('a');
+  var a2 = document.createElement('a');
+  var a3 = document.createElement('a'); // создаю button
+
+  var button1 = document.createElement('button'); // даю ему класс
+
+  div1.classList.add('col-1-4');
+  div2.classList.add('col-1-2');
+  div3.classList.add('col-1-4');
+  ul1.classList.add('filter'); // a1.classList.add('button', 'selected');
+  // a2.classList.add('button');
+  // a3.classList.add('button');
+
+  span1.classList.add('total');
+  button1.classList.add('button', 'button--clear'); // создаю атрибут
+
+  ul1.setAttribute('id', 'js-filters'); // a1.setAttribute('href', '#/all');
+  // a2.setAttribute('href', '#/active');
+  // a3.setAttribute('href', '#/completed');
+
+  span1.setAttribute('id', 'js-total');
+  button1.setAttribute('id', 'js-clear-completed');
+  ul1.innerHTML = '<li><a href="#/all" data-status="all" class="button selected"><span>All</span></a></li>' + '  <li><a href="#/active" data-status="active" class="button"><span>Active</span></a></li>' + '  <li><a href="#/completed" data-status="done" class="button"><span>Completed</span></a></li>'; // текст
+
+  a1.innerText = 'All';
+  a2.innerText = 'Active';
+  a3.innerText = 'Completed';
+  button1.innerText = 'Clear Completed'; // создаем связь
+
+  div1.append(span1);
+  div2.append(ul1);
+  div3.append(button1); // ul1.append(li1, li2, li3);
+  // li1.append(a1);
+  // li2.append(a2);
+  // li3.append(a3);
+  // пушим в html (пытаюсь своими словами надеюсь правильно понимаю)
+
+  jjsBbarr.append(div1, div2, div3);
+  var links = document.querySelectorAll('#js-filters > li');
+  links.forEach(function (element) {
+    element.addEventListener('click', function (event) {
+      var links = document.querySelectorAll('a.selected');
+      links.forEach(function (element) {
+        element.classList.remove('selected');
+      });
+      var currentTarget = event.currentTarget;
+      currentTarget.children[0].classList.add('selected');
+      filter = currentTarget.children[0].dataset.status;
+      renderList();
+    });
+  });
+  var rowBar = document.querySelector('#js-total');
+  rowBar.innerText = "".concat(todos.length, " items left");
+}
+
+;
 var form = document.getElementById('insert__form');
 
 form.onsubmit = function (event) {
@@ -327,8 +295,8 @@ form.onsubmit = function (event) {
     status: 'active'
   });
   inputPush.value = '';
+  renderBar();
   renderList();
-  console.log('todos', todos);
 };
 },{}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -358,7 +326,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55829" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62999" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
